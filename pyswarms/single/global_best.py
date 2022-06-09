@@ -207,21 +207,14 @@ class GlobalBestPSO(SwarmOptimizer):
         self.swarm.pbest_cost = np.full(self.swarm_size[0], np.inf)
         ftol_history = deque(maxlen=self.ftol_iter)
 
-        #verbose == False and 
-        if time != None:
+        # 
+        if verbose == False and time != None:
             # If provided, set the max runtime
             endTime = datetime.datetime.now() + datetime.timedelta(minutes=time)
 
             i = 0
             while datetime.datetime.now() <= endTime:
-            #for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
-
-                print(' ', endTime - datetime.datetime.now(), " seconds left..")
-                #print('test')
-                #self.rep.log(datetime.datetime.now(), lvl=log_level)
-                #self.rep.log(endTime, lvl=log_level)
-                # Compute cost for current position and personal best
-                # fmt: off
+                print(endTime - datetime.datetime.now(), "seconds left..")
                 self.swarm.current_cost = compute_objective_function(self.swarm, objective_func, pool=pool, **kwargs)
                 self.swarm.pbest_pos, self.swarm.pbest_cost = compute_pbest(self.swarm)
                 # Set best_cost_yet_found for ftol
