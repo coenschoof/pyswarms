@@ -212,7 +212,7 @@ class GlobalBestPSO(SwarmOptimizer):
 
         while datetime.datetime.now() <= endTime:
             for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
-                print('test')
+                print(' ', datetime.datetime.now(), endTime)
                 #self.rep.log(datetime.datetime.now(), lvl=log_level)
                 #self.rep.log(endTime, lvl=log_level)
                 # Compute cost for current position and personal best
