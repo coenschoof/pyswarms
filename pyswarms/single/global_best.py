@@ -223,8 +223,8 @@ class GlobalBestPSO(SwarmOptimizer):
                 self.swarm.best_pos, self.swarm.best_cost = self.top.compute_gbest(self.swarm)
                 # fmt: on
                 if verbose:
-                    #self.rep.hook(best_cost=self.swarm.best_cost)
-                    self.rep.hook(best_cost = datetime.datetime.now())
+                    self.rep.hook(best_cost=self.swarm.best_cost)
+                    #self.rep.hook(best_cost = datetime.datetime.now())
                     #self.rep.hook(endTime)
                 # Save to history
                 hist = self.ToHistory(
