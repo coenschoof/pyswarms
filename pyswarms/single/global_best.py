@@ -212,11 +212,9 @@ class GlobalBestPSO(SwarmOptimizer):
 
         i = 0
         while datetime.datetime.now() <= endTime:
-            
-            self.rep.pbar(iters, self.name)[i]
         #for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
 
-            print(' ', datetime.datetime.now() <= endTime)
+            print(' ', datetime.datetime.now(), endTime)
             #print('test')
             #self.rep.log(datetime.datetime.now(), lvl=log_level)
             #self.rep.log(endTime, lvl=log_level)
