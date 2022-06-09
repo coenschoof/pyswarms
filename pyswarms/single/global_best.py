@@ -212,6 +212,7 @@ class GlobalBestPSO(SwarmOptimizer):
 
         while True:
             if datetime.datetime.now() >= endTime:
+                print("TIMES OVER")
                 break
             for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
                 # Compute cost for current position and personal best
