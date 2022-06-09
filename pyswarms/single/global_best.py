@@ -210,10 +210,7 @@ class GlobalBestPSO(SwarmOptimizer):
         # If provided, set the max runtime
         endTime = datetime.datetime.now() + datetime.timedelta(minutes=1)
 
-        while True:
-            if datetime.datetime.now() >= endTime:
-                print("TIMES OVER")
-                break
+        while datetime.datetime.now() <= endTime:
             for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
                 # Compute cost for current position and personal best
                 # fmt: off
