@@ -208,7 +208,7 @@ class GlobalBestPSO(SwarmOptimizer):
         ftol_history = deque(maxlen=self.ftol_iter)
 
         # If provided, set the max runtime
-        endTime = datetime.datetime.now() + datetime.timedelta(minutes=3)
+        endTime = datetime.datetime.now() + datetime.timedelta(minutes=1)
 
         while True:
             if datetime.datetime.now() >= endTime:
