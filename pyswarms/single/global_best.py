@@ -70,6 +70,9 @@ from ..backend.handlers import BoundaryHandler, VelocityHandler, OptionsHandler
 from ..base import SwarmOptimizer
 from ..utils.reporter import Reporter
 
+# Import datetime library
+import datetime
+
 
 class GlobalBestPSO(SwarmOptimizer):
     def __init__(
@@ -203,49 +206,56 @@ class GlobalBestPSO(SwarmOptimizer):
 
         self.swarm.pbest_cost = np.full(self.swarm_size[0], np.inf)
         ftol_history = deque(maxlen=self.ftol_iter)
-        for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
-            # Compute cost for current position and personal best
-            # fmt: off
-            self.swarm.current_cost = compute_objective_function(self.swarm, objective_func, pool=pool, **kwargs)
-            self.swarm.pbest_pos, self.swarm.pbest_cost = compute_pbest(self.swarm)
-            # Set best_cost_yet_found for ftol
-            best_cost_yet_found = self.swarm.best_cost
-            self.swarm.best_pos, self.swarm.best_cost = self.top.compute_gbest(self.swarm)
-            # fmt: on
-            if verbose:
-                self.rep.hook(best_cost=self.swarm.best_cost)
-            # Save to history
-            hist = self.ToHistory(
-                best_cost=self.swarm.best_cost,
-                mean_pbest_cost=np.mean(self.swarm.pbest_cost),
-                mean_neighbor_cost=self.swarm.best_cost,
-                position=self.swarm.position,
-                velocity=self.swarm.velocity,
-            )
-            self._populate_history(hist)
-            # Verify stop criteria based on the relative acceptable cost ftol
-            relative_measure = self.ftol * (1 + np.abs(best_cost_yet_found))
-            delta = (
-                np.abs(self.swarm.best_cost - best_cost_yet_found)
-                < relative_measure
-            )
-            if i < self.ftol_iter:
-                ftol_history.append(delta)
-            else:
-                ftol_history.append(delta)
-                if all(ftol_history):
-                    break
-            # Perform options update
-            self.swarm.options = self.oh(
-                self.options, iternow=i, itermax=iters
-            )
-            # Perform velocity and position updates
-            self.swarm.velocity = self.top.compute_velocity(
-                self.swarm, self.velocity_clamp, self.vh, self.bounds
-            )
-            self.swarm.position = self.top.compute_position(
-                self.swarm, self.bounds, self.bh
-            )
+
+        # If provided, set the max runtime
+        endTime = datetime.datetime.now() + datetime.timedelta(minutes=3)
+
+        while True:
+            if datetime.datetime.now() >= endTime:
+                break
+            for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
+                # Compute cost for current position and personal best
+                # fmt: off
+                self.swarm.current_cost = compute_objective_function(self.swarm, objective_func, pool=pool, **kwargs)
+                self.swarm.pbest_pos, self.swarm.pbest_cost = compute_pbest(self.swarm)
+                # Set best_cost_yet_found for ftol
+                best_cost_yet_found = self.swarm.best_cost
+                self.swarm.best_pos, self.swarm.best_cost = self.top.compute_gbest(self.swarm)
+                # fmt: on
+                if verbose:
+                    self.rep.hook(best_cost=self.swarm.best_cost)
+                # Save to history
+                hist = self.ToHistory(
+                    best_cost=self.swarm.best_cost,
+                    mean_pbest_cost=np.mean(self.swarm.pbest_cost),
+                    mean_neighbor_cost=self.swarm.best_cost,
+                    position=self.swarm.position,
+                    velocity=self.swarm.velocity,
+                )
+                self._populate_history(hist)
+                # Verify stop criteria based on the relative acceptable cost ftol
+                relative_measure = self.ftol * (1 + np.abs(best_cost_yet_found))
+                delta = (
+                    np.abs(self.swarm.best_cost - best_cost_yet_found)
+                    < relative_measure
+                )
+                if i < self.ftol_iter:
+                    ftol_history.append(delta)
+                else:
+                    ftol_history.append(delta)
+                    if all(ftol_history):
+                        break
+                # Perform options update
+                self.swarm.options = self.oh(
+                    self.options, iternow=i, itermax=iters
+                )
+                # Perform velocity and position updates
+                self.swarm.velocity = self.top.compute_velocity(
+                    self.swarm, self.velocity_clamp, self.vh, self.bounds
+                )
+                self.swarm.position = self.top.compute_position(
+                    self.swarm, self.bounds, self.bh
+                )
         # Obtain the final best_cost and the final best_position
         final_best_cost = self.swarm.best_cost.copy()
         final_best_pos = self.swarm.pbest_pos[
