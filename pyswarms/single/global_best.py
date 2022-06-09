@@ -211,7 +211,9 @@ class GlobalBestPSO(SwarmOptimizer):
         endTime = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 
         while datetime.datetime.now() <= endTime:
+            i = 0
         #for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
+
             print(' ', datetime.datetime.now() <= endTime)
             #print('test')
             #self.rep.log(datetime.datetime.now(), lvl=log_level)
@@ -260,6 +262,7 @@ class GlobalBestPSO(SwarmOptimizer):
             self.swarm.position = self.top.compute_position(
                 self.swarm, self.bounds, self.bh
             )
+            i = i + 1
         # Obtain the final best_cost and the final best_position
         final_best_cost = self.swarm.best_cost.copy()
         final_best_pos = self.swarm.pbest_pos[
