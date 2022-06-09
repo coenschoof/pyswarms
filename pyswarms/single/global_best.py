@@ -208,10 +208,12 @@ class GlobalBestPSO(SwarmOptimizer):
         ftol_history = deque(maxlen=self.ftol_iter)
 
         # If provided, set the max runtime
-        endTime = datetime.datetime.now() + datetime.timedelta(minutes=1)
+        endTime = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 
         while datetime.datetime.now() <= endTime:
             for i in self.rep.pbar(iters, self.name) if verbose else range(iters):
+                print(datetime.datetime.now())
+                print(endTime)
                 # Compute cost for current position and personal best
                 # fmt: off
                 self.swarm.current_cost = compute_objective_function(self.swarm, objective_func, pool=pool, **kwargs)
